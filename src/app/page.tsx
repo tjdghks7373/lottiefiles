@@ -10,6 +10,10 @@ interface LottieItem {
   path: string;
 }
 
+interface AnimationData {
+  [key: string]: any;
+}
+
 const Container = styled.div`
   max-width: 1400px;
   margin: 0 auto;
@@ -40,6 +44,7 @@ const Content = styled.div`
 const List = styled.ul`
   display: flex;
   gap: 40px;
+  flex-wrap: wrap;
   justify-content: center;
   padding: 20px 0;
 `;
@@ -60,27 +65,84 @@ const Lotties = styled(Lottie)`
   height: 150px;
   border-radius: 12px;
   background: #1e1c1e;
+  border: 3px solid #2c2c2c;
   box-shadow: inset 2px 2px 2px #232323;
+  cursor: pointer;
+  &:hover {
+    border: 3px solid #4a90e2;
+  }
+`;
+
+const ModalBackdrop = styled.div.attrs<{ show: boolean }>((props) => ({
+  style: {
+    display: props.show ? 'flex' : 'none',
+  },
+}))`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
 `;
 
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
-  const [animations, setAnimations] = useState<LottieItem[]>([]);
+  const [animations, setAnimations] = useState<AnimationData[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentJson, setCurrentJson] = useState<AnimationData | null>(null);
+
+  const openModal = (json: AnimationData) => {
+    setCurrentJson(json);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setCurrentJson(null);
+  };
 
   useEffect(() => {
     const loadAnimations = async () => {
-      const files: LottieItem[] = [
-        { name: 'Animation 1', path: '/lotties/animation1.json' },
-        { name: 'Animation 2', path: '/lotties/animation2.json' },
-      ];
-      setLotties(files);
-      const loaded = await Promise.all(
-        files.map(async (item) => {
-          const res = await fetch(item.path);
-          return await res.json();
-        })
-      );
-      setAnimations(loaded);
+      try {
+        const files: LottieItem[] = [
+          { name: 'Animation 1', path: '/lotties/animation1.json' },
+          { name: 'Animation 2', path: '/lotties/animation2.json' },
+          { name: 'Animation 3', path: '/lotties/animation3.json' },
+          { name: 'Animation 4', path: '/lotties/animation4.json' },
+          { name: 'Animation 5', path: '/lotties/animation5.json' },
+          { name: 'Animation 6', path: '/lotties/animation6.json' },
+        ];
+        setLotties(files);
+
+        const loaded = await Promise.all(
+          files.map(async (item) => {
+            try {
+              const res = await fetch(item.path);
+              if (!res.ok) throw new Error(`Failed to fetch ${item.path}`);
+              return await res.json();
+            } catch (error) {
+              console.error(error);
+              return null;
+            }
+          })
+        );
+        setAnimations(loaded.filter((anim) => anim !== null));
+      } catch (error) {
+        console.error('Error loading animations:', error);
+      }
     };
     loadAnimations();
   }, []);
@@ -101,10 +163,13 @@ export default function Home() {
         <Content>
           <List>
             {lotties.map((item, index) => (
-              <ListItem key={index}>
+              <ListItem key={item.name}>
                 {animations[index] ? (
                   <>
-                    <Lotties animationData={animations[index]} />
+                    <Lotties
+                      animationData={animations[index]}
+                      onClick={() => openModal(animations[index])}
+                    />
                   </>
                 ) : (
                   <p>Loading...</p>
@@ -115,6 +180,14 @@ export default function Home() {
           </List>
         </Content>
       </Container>
+      <ModalBackdrop show={modalOpen} onClick={closeModal}>
+        <ModalContent onClick={(e) => e.stopPropagation()}>
+          <button onClick={closeModal}>Close</button>
+          <pre>
+            {currentJson ? JSON.stringify(currentJson, null, 2) : 'Loading...'}
+          </pre>
+        </ModalContent>
+      </ModalBackdrop>
     </>
   );
 }
