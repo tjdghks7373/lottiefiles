@@ -11,7 +11,13 @@ interface LottieItem {
 }
 
 interface AnimationData {
-  [key: string]: any;
+  v: string;
+  fr: number;
+  ip: number;
+  op: number;
+  w: number;
+  h: number;
+  [key: string]: unknown; // 기타 필드는 unknown으로 처리
 }
 
 const Container = styled.div`
