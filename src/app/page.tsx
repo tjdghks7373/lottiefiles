@@ -23,7 +23,7 @@ interface AnimationData {
 const Container = styled.div`
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 20px 200px;
 `;
 
 const MainText = styled.h1`
@@ -124,6 +124,18 @@ export default function Home() {
     const loadAnimations = async () => {
       try {
         const files: LottieItem[] = [
+          { name: 'Animation 1', path: '/lotties/animation1.json' },
+          { name: 'Animation 2', path: '/lotties/animation2.json' },
+          { name: 'Animation 3', path: '/lotties/animation3.json' },
+          { name: 'Animation 4', path: '/lotties/animation4.json' },
+          { name: 'Animation 5', path: '/lotties/animation5.json' },
+          { name: 'Animation 6', path: '/lotties/animation6.json' },
+          { name: 'Animation 1', path: '/lotties/animation1.json' },
+          { name: 'Animation 2', path: '/lotties/animation2.json' },
+          { name: 'Animation 3', path: '/lotties/animation3.json' },
+          { name: 'Animation 4', path: '/lotties/animation4.json' },
+          { name: 'Animation 5', path: '/lotties/animation5.json' },
+          { name: 'Animation 6', path: '/lotties/animation6.json' },
           { name: 'Animation 1', path: '/lotties/animation1.json' },
           { name: 'Animation 2', path: '/lotties/animation2.json' },
           { name: 'Animation 3', path: '/lotties/animation3.json' },
