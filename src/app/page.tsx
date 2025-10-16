@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import Header from '@/components/layout/Header';
+import Modal from '@/components/Modal';
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface LottieItem {
@@ -81,28 +82,6 @@ const LottieWrapper = styled.div`
   &:hover {
     border: 3px solid #4a90e2;
   }
-`;
-
-const ModalBackdrop = styled.div<{ $show: boolean }>`
-  display: ${({ $show }) => ($show ? 'flex' : 'none')};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 600px;
-  height: 600px;
-  overflow: auto;
 `;
 
 export default function Home() {
@@ -197,16 +176,15 @@ export default function Home() {
           </List>
         </Content>
       </Container>
-      <ModalBackdrop $show={modalOpen} onClick={closeModal}>
-        <ModalContent onClick={(e) => e.stopPropagation()}>
-          <button onClick={closeModal}>Close</button>
-          {currentJson && (
-            <LottieWrapper style={{ width: 300, height: 300 }}>
-              <Lottie animationData={currentJson} loop />
-            </LottieWrapper>
-          )}
-        </ModalContent>
-      </ModalBackdrop>
+      <Modal show={modalOpen} onClose={closeModal}>
+        {currentJson && (
+          <LottieWrapper
+            style={{ width: '99%', height: 300, margin: '30px auto' }}
+          >
+            <Lottie animationData={currentJson} loop />
+          </LottieWrapper>
+        )}
+      </Modal>
     </>
   );
 }
