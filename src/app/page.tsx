@@ -183,9 +183,8 @@ export default function Home() {
                       animationData={animations[index]}
                       onClick={() => openModal(animations[index])}
                       style={{
-                        height: '100%',
-                        width: 'auto',
-                        maxWidth: '100%',
+                        height: '100px',
+                        width: '100px',
                       }}
                     />
                   </LottieWrapper>
