@@ -135,7 +135,7 @@ export default function Home() {
           { name: 'Seed', path: '/lotties/seed.json' },
           { name: 'Points', path: '/lotties/points.json' },
           { name: 'Pay', path: '/lotties/pay.json' },
-          { name: 'Gift', path: '/lotties/gift.json' },
+          { name: 'Gift', path: '/lotties/gift01.json' },
           { name: 'Clapping', path: '/lotties/clapping.json' },
         ];
         setLotties(files);
