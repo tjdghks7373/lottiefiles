@@ -49,7 +49,7 @@ const Content = styled.div`
 
 const List = styled.ul`
   display: flex;
-  gap: 40px;
+  gap: 60px;
   flex-wrap: wrap;
   justify-content: center;
   padding: 20px 0;
@@ -66,24 +66,25 @@ const ListItem = styled.li`
   justify-content: center;
 `;
 
-const Lotties = styled(Lottie)`
+const LottieWrapper = styled.div`
   width: 150px;
   height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 12px;
   background: #1e1c1e;
   border: 3px solid #2c2c2c;
   box-shadow: inset 2px 2px 2px #232323;
   cursor: pointer;
+
   &:hover {
     border: 3px solid #4a90e2;
   }
 `;
 
-const ModalBackdrop = styled.div.attrs<{ show: boolean }>((props) => ({
-  style: {
-    display: props.show ? 'flex' : 'none',
-  },
-}))`
+const ModalBackdrop = styled.div<{ $show: boolean }>`
+  display: ${({ $show }) => ($show ? 'flex' : 'none')};
   position: fixed;
   top: 0;
   left: 0;
@@ -99,8 +100,8 @@ const ModalContent = styled.div`
   background: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 90%;
-  max-height: 90%;
+  width: 600px;
+  height: 600px;
   overflow: auto;
 `;
 
@@ -124,24 +125,18 @@ export default function Home() {
     const loadAnimations = async () => {
       try {
         const files: LottieItem[] = [
-          { name: 'Animation 1', path: '/lotties/animation1.json' },
-          { name: 'Animation 2', path: '/lotties/animation2.json' },
-          { name: 'Animation 3', path: '/lotties/animation3.json' },
-          { name: 'Animation 4', path: '/lotties/animation4.json' },
-          { name: 'Animation 5', path: '/lotties/animation5.json' },
-          { name: 'Animation 6', path: '/lotties/animation6.json' },
-          { name: 'Animation 1', path: '/lotties/animation1.json' },
-          { name: 'Animation 2', path: '/lotties/animation2.json' },
-          { name: 'Animation 3', path: '/lotties/animation3.json' },
-          { name: 'Animation 4', path: '/lotties/animation4.json' },
-          { name: 'Animation 5', path: '/lotties/animation5.json' },
-          { name: 'Animation 6', path: '/lotties/animation6.json' },
-          { name: 'Animation 1', path: '/lotties/animation1.json' },
-          { name: 'Animation 2', path: '/lotties/animation2.json' },
-          { name: 'Animation 3', path: '/lotties/animation3.json' },
-          { name: 'Animation 4', path: '/lotties/animation4.json' },
-          { name: 'Animation 5', path: '/lotties/animation5.json' },
-          { name: 'Animation 6', path: '/lotties/animation6.json' },
+          { name: 'Coupon', path: '/lotties/coupon.json' },
+          { name: 'Calendar', path: '/lotties/calendar.json' },
+          { name: 'Roulette', path: '/lotties/roulette.json' },
+          { name: 'Walk', path: '/lotties/walk.json' },
+          { name: 'Fortune', path: '/lotties/fortune.json' },
+          { name: 'Community', path: '/lotties/community.json' },
+          { name: 'Fun', path: '/lotties/fun.json' },
+          { name: 'Seed', path: '/lotties/seed.json' },
+          { name: 'Points', path: '/lotties/points.json' },
+          { name: 'Pay', path: '/lotties/pay.json' },
+          { name: 'Gift', path: '/lotties/gift.json' },
+          { name: 'Clapping', path: '/lotties/clapping.json' },
         ];
         setLotties(files);
 
@@ -181,14 +176,19 @@ export default function Home() {
         <Content>
           <List>
             {lotties.map((item, index) => (
-              <ListItem key={item.name}>
+              <ListItem key={`${item.name}-${index}`}>
                 {animations[index] ? (
-                  <>
-                    <Lotties
+                  <LottieWrapper>
+                    <Lottie
                       animationData={animations[index]}
                       onClick={() => openModal(animations[index])}
+                      style={{
+                        height: '100%',
+                        width: 'auto',
+                        maxWidth: '100%',
+                      }}
                     />
-                  </>
+                  </LottieWrapper>
                 ) : (
                   <p>Loading...</p>
                 )}
@@ -198,12 +198,14 @@ export default function Home() {
           </List>
         </Content>
       </Container>
-      <ModalBackdrop show={modalOpen} onClick={closeModal}>
+      <ModalBackdrop $show={modalOpen} onClick={closeModal}>
         <ModalContent onClick={(e) => e.stopPropagation()}>
           <button onClick={closeModal}>Close</button>
-          <pre>
-            {currentJson ? JSON.stringify(currentJson, null, 2) : 'Loading...'}
-          </pre>
+          {currentJson && (
+            <LottieWrapper style={{ width: 300, height: 300 }}>
+              <Lottie animationData={currentJson} loop />
+            </LottieWrapper>
+          )}
         </ModalContent>
       </ModalBackdrop>
     </>
