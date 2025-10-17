@@ -38,7 +38,7 @@ const ListItem = styled.li`
 export default function Header() {
   return (
     <Wrapper>
-      <Title>Lottie Files</Title>
+      <Title><Link href={'/'}>Lottie Files</Link></Title>
       <Navi>
         <List>
           <ListItem>
