@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import Header from '@/components/layout/Header';
 import Modal from '@/components/Modal';
+import ScrollCircles from '@/components/ScrollCircles';
 
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface LottieItem {
@@ -46,14 +47,26 @@ const SubText = styled.p`
 
 const Content = styled.div`
   margin-top: 50px;
+  position: relative;
+  z-index: 22;
+  background-color: #000;
 `;
 
 const List = styled.ul`
   display: flex;
-  gap: clamp(16px, 5vw, 60px);
   flex-wrap: wrap;
-  justify-content: center;
+  gap: 0;
   padding: 20px 0;
+  justify-content: flex-start;
+
+  & > li {
+    flex: 0 0 calc((100% - 5 * 16px) / 6);
+    margin-right: 16px;
+
+    &:nth-child(6n) {
+      margin-right: 0;
+    }
+  }
 `;
 
 const ListItem = styled.li`
@@ -115,7 +128,22 @@ export default function Home() {
           { name: 'Points', path: '/lottie/Points.json' },
           { name: 'Roulette', path: '/lottie/Roulette.json' },
           { name: 'Seed', path: '/lottie/Seed.json' },
-          
+          { name: 'Calendar', path: '/lottie/Calendar.json' },
+          { name: 'Clapping', path: '/lottie/Clapping.json' },
+          { name: 'Community_A', path: '/lottie/Community_A.json' },
+          { name: 'Community_B', path: '/lottie/Community_B.json' },
+          { name: 'Confetti', path: '/lottie/Confetti.json' },
+          { name: 'Coupon_Popup', path: '/lottie/Coupon_Popup.json' },
+          { name: 'Coupon_TVING', path: '/lottie/Coupon_TVING.json' },
+          { name: 'Fortune', path: '/lottie/Fortune.json' },
+          { name: 'Fun', path: '/lottie/Fun.json' },
+          { name: 'GIft', path: '/lottie/GIft.json' },
+          { name: 'Onewalk', path: '/lottie/Onewalk.json' },
+          { name: 'Pay', path: '/lottie/Pay.json' },
+          { name: 'Points_Popup', path: '/lottie/points_Popup.json' },
+          { name: 'Points', path: '/lottie/Points.json' },
+          { name: 'Roulette', path: '/lottie/Roulette.json' },
+          { name: 'Seed', path: '/lottie/Seed.json' },
         ];
         setLotties(files);
 
@@ -176,6 +204,24 @@ export default function Home() {
           </List>
         </Content>
       </Container>
+      <ScrollCircles
+        minCount={5}
+        maxCount={10}
+        minSize={40}
+        maxSize={120}
+        minOffset={100}
+        maxOffset={600}
+        minDuration={7}
+        maxDuration={10}
+        colors={[
+          '#a2dbf5',
+          '#f8a9ec',
+          '#cea4f9',
+          '#9d49f4',
+          '#617cff',
+          '#ed27cf',
+        ]}
+      />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         {currentJson && (
           <LottieWrapper
