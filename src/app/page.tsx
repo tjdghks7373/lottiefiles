@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import Header from '@/components/layout/Header';
 import Modal from '@/components/Modal';
 
-
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface LottieItem {
   name: string;
@@ -88,23 +87,54 @@ const LottieWrapper = styled.div`
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
   const [animations, setAnimations] = useState<AnimationData[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [currentJson, setCurrentJson] = useState<AnimationData | null>(null);
 
   const openModal = (json: AnimationData) => {
     setCurrentJson(json);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setCurrentJson(null);
+    setIsOpen(true);
   };
 
   useEffect(() => {
     const loadAnimations = async () => {
       try {
         const files: LottieItem[] = [
+          { name: 'Coupon', path: '/lotties/coupon.json' },
+          { name: 'Calendar', path: '/lotties/calendar.json' },
+          { name: 'Roulette', path: '/lotties/roulette.json' },
+          { name: 'Walk', path: '/lotties/walk.json' },
+          { name: 'Fortune', path: '/lotties/fortune.json' },
+          { name: 'Community', path: '/lotties/community.json' },
+          { name: 'Fun', path: '/lotties/fun.json' },
+          { name: 'Seed', path: '/lotties/seed.json' },
+          { name: 'Points', path: '/lotties/points.json' },
+          { name: 'Pay', path: '/lotties/pay.json' },
+          { name: 'Gift', path: '/lotties/gift01.json' },
+          { name: 'Clapping', path: '/lotties/clapping.json' },
+          { name: 'Coupon', path: '/lotties/coupon.json' },
+          { name: 'Calendar', path: '/lotties/calendar.json' },
+          { name: 'Roulette', path: '/lotties/roulette.json' },
+          { name: 'Walk', path: '/lotties/walk.json' },
+          { name: 'Fortune', path: '/lotties/fortune.json' },
+          { name: 'Community', path: '/lotties/community.json' },
+          { name: 'Fun', path: '/lotties/fun.json' },
+          { name: 'Seed', path: '/lotties/seed.json' },
+          { name: 'Points', path: '/lotties/points.json' },
+          { name: 'Pay', path: '/lotties/pay.json' },
+          { name: 'Gift', path: '/lotties/gift01.json' },
+          { name: 'Clapping', path: '/lotties/clapping.json' },
+          { name: 'Coupon', path: '/lotties/coupon.json' },
+          { name: 'Calendar', path: '/lotties/calendar.json' },
+          { name: 'Roulette', path: '/lotties/roulette.json' },
+          { name: 'Walk', path: '/lotties/walk.json' },
+          { name: 'Fortune', path: '/lotties/fortune.json' },
+          { name: 'Community', path: '/lotties/community.json' },
+          { name: 'Fun', path: '/lotties/fun.json' },
+          { name: 'Seed', path: '/lotties/seed.json' },
+          { name: 'Points', path: '/lotties/points.json' },
+          { name: 'Pay', path: '/lotties/pay.json' },
+          { name: 'Gift', path: '/lotties/gift01.json' },
+          { name: 'Clapping', path: '/lotties/clapping.json' },
           { name: 'Coupon', path: '/lotties/coupon.json' },
           { name: 'Calendar', path: '/lotties/calendar.json' },
           { name: 'Roulette', path: '/lotties/roulette.json' },
@@ -177,7 +207,7 @@ export default function Home() {
           </List>
         </Content>
       </Container>
-      <Modal show={modalOpen} onClose={closeModal}>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         {currentJson && (
           <LottieWrapper
             style={{ width: '99%', height: 300, margin: '30px auto' }}
