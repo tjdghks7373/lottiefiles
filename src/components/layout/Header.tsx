@@ -1,5 +1,6 @@
 'use client';
 import styled from 'styled-components';
+import Link from 'next/link';
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,8 +41,15 @@ export default function Header() {
       <Title>Lottie Files</Title>
       <Navi>
         <List>
-          <ListItem>Icons</ListItem>
-          <ListItem>About</ListItem>
+          <ListItem>
+            <Link href={'/about'}>About</Link>
+          </ListItem>
+          <ListItem>
+            <Link href={'/'}>Icons</Link>
+          </ListItem>
+          <ListItem>
+            <Link href={'/sample'}>Sample</Link>
+          </ListItem>
         </List>
       </Navi>
     </Wrapper>

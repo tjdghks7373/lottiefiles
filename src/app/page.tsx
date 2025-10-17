@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Header from '@/components/layout/Header';
 import Modal from '@/components/Modal';
 
+
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface LottieItem {
   name: string;
@@ -50,7 +51,7 @@ const Content = styled.div`
 
 const List = styled.ul`
   display: flex;
-  gap: 60px;
+  gap: clamp(16px, 5vw, 60px);
   flex-wrap: wrap;
   justify-content: center;
   padding: 20px 0;
