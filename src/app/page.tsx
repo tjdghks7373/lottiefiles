@@ -53,19 +53,12 @@ const Content = styled.div`
 `;
 
 const List = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0;
-  padding: 20px 0;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 88px;
 
   & > li {
-    flex: 0 0 calc((100% - 5 * 16px) / 6);
-    margin-right: 16px;
-
-    &:nth-child(6n) {
-      margin-right: 0;
-    }
+    list-style: none;
   }
 `;
 
