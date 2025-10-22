@@ -99,6 +99,26 @@ const PopContent = styled.div`
   overflow: hidden;
 `;
 
+const DownloadButton = styled.button`
+  padding: 12px 24px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+  width: 100%;
+  &:hover {
+    background-color: #357abd;
+  }
+`;
+const Section = styled.div`
+  margin: 40px auto 10px;
+`;
+
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
   const [animations, setAnimations] = useState<AnimationData[]>([]);
@@ -108,6 +128,20 @@ export default function Home() {
   const openModal = (json: AnimationData) => {
     setCurrentJson(json);
     setIsOpen(true);
+  };
+
+  const handleDownload = (json: AnimationData, name: string) => {
+    const blob = new Blob([JSON.stringify(json, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   useEffect(() => {
@@ -210,20 +244,32 @@ export default function Home() {
       />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         {currentJson && (
-          <LottieWrapper
-            style={{ width: '99%', height: 300, margin: '30px auto' }}
-          >
-            <PopContent>
-              <Lottie
-                animationData={currentJson}
-                style={{
-                  width: '200px',
-                  height: '200px',
-                }}
-                loop
-              />
-            </PopContent>
-          </LottieWrapper>
+          <Section>
+            <LottieWrapper style={{ width: '99%', height: 300 }}>
+              <PopContent>
+                <Lottie
+                  animationData={currentJson}
+                  style={{
+                    width: '200px',
+                    height: '200px',
+                  }}
+                  loop
+                />
+              </PopContent>
+            </LottieWrapper>
+            <DownloadButton
+              onClick={() => {
+                const currentLottie = lotties.find(
+                  (item, index) => animations[index] === currentJson
+                );
+                if (currentLottie) {
+                  handleDownload(currentJson, currentLottie.name);
+                }
+              }}
+            >
+              Download JSON
+            </DownloadButton>
+          </Section>
         )}
       </Modal>
     </>

@@ -28,7 +28,6 @@ const ModalContent = styled.div`
   padding: 20px;
   border-radius: 8px;
   width: 600px;
-  height: 600px;
   overflow: auto;
   &::-webkit-scrollbar {
     width: 5px;
