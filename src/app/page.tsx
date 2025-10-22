@@ -100,8 +100,8 @@ const PopContent = styled.div`
 `;
 
 const DownloadButton = styled.button`
-  padding: 12px 24px;
-  background-color: #4a90e2;
+  padding: 15px 24px;
+  background-color: #000;
   color: white;
   border: none;
   border-radius: 8px;
@@ -111,9 +111,6 @@ const DownloadButton = styled.button`
   margin-top: 20px;
   transition: background-color 0.2s;
   width: 100%;
-  &:hover {
-    background-color: #357abd;
-  }
 `;
 const Section = styled.div`
   margin: 40px auto 10px;
