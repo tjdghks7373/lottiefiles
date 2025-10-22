@@ -90,6 +90,15 @@ const LottieWrapper = styled.div`
   }
 `;
 
+const PopContent = styled.div`
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
   const [animations, setAnimations] = useState<AnimationData[]>([]);
@@ -105,22 +114,6 @@ export default function Home() {
     const loadAnimations = async () => {
       try {
         const files: LottieItem[] = [
-          { name: 'Calendar', path: '/lottie/Calendar.json' },
-          { name: 'Clapping', path: '/lottie/Clapping.json' },
-          { name: 'Community_A', path: '/lottie/Community_A.json' },
-          { name: 'Community_B', path: '/lottie/Community_B.json' },
-          { name: 'Confetti', path: '/lottie/Confetti.json' },
-          { name: 'Coupon_Popup', path: '/lottie/Coupon_Popup.json' },
-          { name: 'Coupon_TVING', path: '/lottie/Coupon_TVING.json' },
-          { name: 'Fortune', path: '/lottie/Fortune.json' },
-          { name: 'Fun', path: '/lottie/Fun.json' },
-          { name: 'GIft', path: '/lottie/GIft.json' },
-          { name: 'Onewalk', path: '/lottie/Onewalk.json' },
-          { name: 'Pay', path: '/lottie/Pay.json' },
-          { name: 'Points_Popup', path: '/lottie/points_Popup.json' },
-          { name: 'Points', path: '/lottie/Points.json' },
-          { name: 'Roulette', path: '/lottie/Roulette.json' },
-          { name: 'Seed', path: '/lottie/Seed.json' },
           { name: 'Calendar', path: '/lottie/Calendar.json' },
           { name: 'Clapping', path: '/lottie/Clapping.json' },
           { name: 'Community_A', path: '/lottie/Community_A.json' },
@@ -220,7 +213,16 @@ export default function Home() {
           <LottieWrapper
             style={{ width: '99%', height: 300, margin: '30px auto' }}
           >
-            <Lottie animationData={currentJson} loop />
+            <PopContent>
+              <Lottie
+                animationData={currentJson}
+                style={{
+                  width: '200px',
+                  height: '200px',
+                }}
+                loop
+              />
+            </PopContent>
           </LottieWrapper>
         )}
       </Modal>
