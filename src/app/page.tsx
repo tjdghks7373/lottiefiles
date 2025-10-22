@@ -73,19 +73,6 @@ const ListItem = styled.li`
   justify-content: center;
 `;
 
-const StyledListItem = styled(ListItem)`
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 3s ease,
-    transform 0.5s ease;
-
-  &.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
 const LottieWrapper = styled.div`
   width: 150px;
   height: 150px;
@@ -129,12 +116,19 @@ const Section = styled.div`
   margin: 40px auto 10px;
 `;
 
+// ScrollCircles 스타일 정의
+const FixedScrollCircles = styled(ScrollCircles)`
+  position: fixed; // 고정 위치
+  top: 20px; // 원하는 위치로 조정
+  left: 20px; // 원하는 위치로 조정
+  z-index: 1000; // 다른 요소 위에 표시
+`;
+
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
   const [animations, setAnimations] = useState<AnimationData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [currentJson, setCurrentJson] = useState<AnimationData | null>(null);
-  const [visibleItems, setVisibleItems] = useState<number>(0);
 
   const openModal = (json: AnimationData) => {
     setCurrentJson(json);
@@ -239,6 +233,22 @@ export default function Home() {
           { name: 'Points', path: '/lottie/Points.json' },
           { name: 'Roulette', path: '/lottie/Roulette.json' },
           { name: 'Seed', path: '/lottie/Seed.json' },
+          { name: 'Calendar', path: '/lottie/Calendar.json' },
+          { name: 'Clapping', path: '/lottie/Clapping.json' },
+          { name: 'Community_A', path: '/lottie/Community_A.json' },
+          { name: 'Community_B', path: '/lottie/Community_B.json' },
+          { name: 'Confetti', path: '/lottie/Confetti.json' },
+          { name: 'Coupon_Popup', path: '/lottie/Coupon_Popup.json' },
+          { name: 'Coupon_TVING', path: '/lottie/Coupon_TVING.json' },
+          { name: 'Fortune', path: '/lottie/Fortune.json' },
+          { name: 'Fun', path: '/lottie/Fun.json' },
+          { name: 'GIft', path: '/lottie/GIft.json' },
+          { name: 'Onewalk', path: '/lottie/Onewalk.json' },
+          { name: 'Pay', path: '/lottie/Pay.json' },
+          { name: 'Points_Popup', path: '/lottie/points_Popup.json' },
+          { name: 'Points', path: '/lottie/Points.json' },
+          { name: 'Roulette', path: '/lottie/Roulette.json' },
+          { name: 'Seed', path: '/lottie/Seed.json' },
         ];
         setLotties(files);
 
@@ -262,25 +272,6 @@ export default function Home() {
     loadAnimations();
   }, []);
 
-  // 스크롤 이벤트 핸들러
-  const handleScroll = () => {
-    const items = document.querySelectorAll('.list-item');
-    items.forEach((item, index) => {
-      const rect = item.getBoundingClientRect();
-      // 현재 항목이 뷰포트에 들어오면 visibleItems를 업데이트
-      if (rect.top < window.innerHeight && index === visibleItems) {
-        setVisibleItems((prev) => prev + 1);
-      }
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [visibleItems]);
-
   return (
     <>
       <Header />
@@ -297,10 +288,7 @@ export default function Home() {
         <Content>
           <List>
             {lotties.map((item, index) => (
-              <StyledListItem
-                key={`${item.name}-${index}`}
-                className={`list-item ${index < visibleItems ? 'visible' : ''}`}
-              >
+              <ListItem key={`${item.name}-${index}`}>
                 {animations[index] ? (
                   <LottieWrapper>
                     <Lottie
@@ -316,12 +304,12 @@ export default function Home() {
                   <p>Loading...</p>
                 )}
                 <p>{item.name}</p>
-              </StyledListItem>
+              </ListItem>
             ))}
           </List>
         </Content>
       </Container>
-      <ScrollCircles
+      <FixedScrollCircles
         minCount={5}
         maxCount={10}
         minSize={40}
