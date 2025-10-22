@@ -73,6 +73,19 @@ const ListItem = styled.li`
   justify-content: center;
 `;
 
+const StyledListItem = styled(ListItem)`
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 2s ease,
+    transform 0.5s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const LottieWrapper = styled.div`
   width: 150px;
   height: 150px;
@@ -121,6 +134,7 @@ export default function Home() {
   const [animations, setAnimations] = useState<AnimationData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [currentJson, setCurrentJson] = useState<AnimationData | null>(null);
+  const [visibleItems, setVisibleItems] = useState<number>(0);
 
   const openModal = (json: AnimationData) => {
     setCurrentJson(json);
@@ -184,6 +198,25 @@ export default function Home() {
     loadAnimations();
   }, []);
 
+  // 스크롤 이벤트 핸들러
+  const handleScroll = () => {
+    const items = document.querySelectorAll('.list-item');
+    items.forEach((item, index) => {
+      const rect = item.getBoundingClientRect();
+      // 현재 항목이 뷰포트에 들어오면 visibleItems를 업데이트
+      if (rect.top < window.innerHeight && index === visibleItems) {
+        setVisibleItems((prev) => prev + 1);
+      }
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [visibleItems]);
+
   return (
     <>
       <Header />
@@ -200,7 +233,10 @@ export default function Home() {
         <Content>
           <List>
             {lotties.map((item, index) => (
-              <ListItem key={`${item.name}-${index}`}>
+              <StyledListItem
+                key={`${item.name}-${index}`}
+                className={`list-item ${index < visibleItems ? 'visible' : ''}`}
+              >
                 {animations[index] ? (
                   <LottieWrapper>
                     <Lottie
@@ -216,7 +252,7 @@ export default function Home() {
                   <p>Loading...</p>
                 )}
                 <p>{item.name}</p>
-              </ListItem>
+              </StyledListItem>
             ))}
           </List>
         </Content>
