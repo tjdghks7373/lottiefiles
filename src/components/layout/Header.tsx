@@ -45,10 +45,10 @@ const ListItem = styled.li`
     font-weight: 600;
   }
   a:hover {
-    color: #4a90e2;
+    color: #ed27cf;
   }
   a.active {
-    color: #4a90e2;
+    color: #ed27cf;
     font-weight: 700;
   }
 `;
