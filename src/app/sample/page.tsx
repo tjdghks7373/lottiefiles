@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 import Header from '@/components/layout/Header';
 import Modal from '@/components/Modal';
 import ScrollCircles from '@/components/ScrollCircles';
@@ -8,6 +11,7 @@ import ScrollCircles from '@/components/ScrollCircles';
 interface LottieItem {
   name: string;
   path: string;
+  type?: 'gif' | 'lottie';
 }
 
 const Container = styled.div`
@@ -86,60 +90,131 @@ const PopContent = styled.div`
   justify-content: center;
 `;
 
-const DownloadButton = styled.button`
-  padding: 15px 24px;
-  background-color: #000;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.2s;
-  width: 100%;
-`;
 const Section = styled.div`
   margin: 40px auto 10px;
 `;
 
 // ScrollCircles 스타일 정의
 const FixedScrollCircles = styled(ScrollCircles)`
-  position: fixed; // 고정 위치
-  top: 20px; // 원하는 위치로 조정
-  left: 20px; // 원하는 위치로 조정
-  z-index: 1000; // 다른 요소 위에 표시
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
 `;
 
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentGif, setCurrentGif] = useState<string | null>(null);
+  const [currentAsset, setCurrentAsset] = useState<LottieItem | null>(null);
+  const [lottieDataMap, setLottieDataMap] = useState<Record<string, unknown>>(
+    {}
+  );
 
-  const openModal = (gifPath: string) => {
-    setCurrentGif(gifPath);
+  const openModal = async (asset: LottieItem) => {
+    setCurrentAsset(asset);
     setIsOpen(true);
+    if (
+      (asset.type === 'lottie' || asset.path.endsWith('.json')) &&
+      !lottieDataMap[asset.path]
+    ) {
+      try {
+        const res = await fetch(asset.path);
+        if (res.ok) {
+          const json = await res.json();
+          setLottieDataMap((m) => ({ ...m, [asset.path]: json }));
+        } else {
+          console.error('Failed to load lottie json', asset.path, res.status);
+        }
+      } catch (e) {
+        console.error('Error fetching lottie json', e);
+      }
+    }
   };
 
-  const handleDownload = (path: string, name: string) => {
-    // Use anchor with download attribute (works for same-origin public files)
-    const a = document.createElement('a');
-    a.href = path;
-    a.download = `${name}.gif`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const handleDownload = async (asset: LottieItem) => {
+    if (asset.type === 'gif' || asset.path.endsWith('.gif')) {
+      const a = document.createElement('a');
+      a.href = asset.path;
+      a.download = `${asset.name}.gif`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      return;
+    }
+
+    // Lottie JSON download
+    const data = lottieDataMap[asset.path];
+    if (data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${asset.name}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    // If not prefetched, try fetch and then download
+    try {
+      const res = await fetch(asset.path);
+      if (!res.ok) throw new Error(`Failed to fetch ${asset.path}`);
+      const json = await res.json();
+      const blob = new Blob([JSON.stringify(json, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${asset.name}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Download failed', e);
+    }
   };
 
   useEffect(() => {
     const files: LottieItem[] = [
-      { name: 'Cloud', path: '/lottie/sample/Cloud.gif' },
-      { name: 'Event_Snow', path: '/lottie/sample/Event_Snow.gif' },
-      { name: 'Event_Spring', path: '/lottie/sample/Event_Spring.gif' },
-      { name: 'Event_Summer', path: '/lottie/sample/Event_Summer.gif' },
-      { name: 'Gift', path: '/lottie/sample/Gift.gif' },
+      { name: 'Cloud', path: '/lottie/sample/Cloud.gif', type: 'gif' },
+      {
+        name: 'Event_Snow',
+        path: '/lottie/sample/Event_Snow.gif',
+        type: 'gif',
+      },
+      {
+        name: 'Event_Spring',
+        path: '/lottie/sample/Event_Spring.json',
+        type: 'lottie',
+      },
+      {
+        name: 'Event_Summer',
+        path: '/lottie/sample/Event_Summer.gif',
+        type: 'gif',
+      },
+      { name: 'Gift', path: '/lottie/sample/Gift.gif', type: 'gif' },
     ];
     setLotties(files);
+    // Preload lottie JSON thumbnails
+    files.forEach(async (f) => {
+      if (f.type === 'lottie' || f.path.endsWith('.json')) {
+        try {
+          const res = await fetch(f.path);
+          if (res.ok) {
+            const json = await res.json();
+            setLottieDataMap((m) => ({ ...m, [f.path]: json }));
+          }
+        } catch (e) {
+          console.error('Failed preloading lottie', f.path, e);
+        }
+      }
+    });
   }, []);
 
   return (
@@ -160,17 +235,43 @@ export default function Home() {
             {lotties.map((item, index) => (
               <ListItem key={`${item.name}-${index}`}>
                 <LottieWrapper>
-                  <img
-                    src={item.path}
-                    alt={item.name}
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      objectFit: 'cover',
-                      borderRadius: 8,
-                    }}
-                    onClick={() => openModal(item.path)}
-                  />
+                  {item.type === 'lottie' || item.path.endsWith('.json') ? (
+                    lottieDataMap[item.path] ? (
+                      <div
+                        onClick={() => openModal(item)}
+                        style={{ width: 100, height: 100 }}
+                      >
+                        <Lottie
+                          animationData={lottieDataMap[item.path]}
+                          style={{ width: 100, height: 100 }}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          width: 100,
+                          height: 100,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        Loading...
+                      </div>
+                    )
+                  ) : (
+                    <img
+                      src={item.path}
+                      alt={item.name}
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'cover',
+                        borderRadius: 8,
+                      }}
+                      onClick={() => openModal(item)}
+                    />
+                  )}
                 </LottieWrapper>
                 <p>{item.name}</p>
               </ListItem>
@@ -197,19 +298,62 @@ export default function Home() {
         ]}
       />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        {currentGif && (
+        {currentAsset && (
           <Section>
             <LottieWrapper style={{ width: '99%', height: 'auto' }}>
               <PopContent style={{ flexDirection: 'column', gap: 16 }}>
-                <img
-                  src={currentGif}
-                  alt="preview"
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: '400px',
-                    borderRadius: 8,
-                  }}
-                />
+                {currentAsset.type === 'lottie' ||
+                currentAsset.path.endsWith('.json') ? (
+                  lottieDataMap[currentAsset.path] ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 12,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '400px',
+                          maxWidth: '100%',
+                          maxHeight: 400,
+                        }}
+                      >
+                        <Lottie
+                          animationData={lottieDataMap[currentAsset.path]}
+                        />
+                      </div>
+                      <button onClick={() => handleDownload(currentAsset)}>
+                        Download JSON
+                      </button>
+                    </div>
+                  ) : (
+                    <div>Loading animation...</div>
+                  )
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 12,
+                    }}
+                  >
+                    <img
+                      src={currentAsset.path}
+                      alt="preview"
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: 400,
+                        borderRadius: 8,
+                      }}
+                    />
+                    <button onClick={() => handleDownload(currentAsset)}>
+                      Download GIF
+                    </button>
+                  </div>
+                )}
               </PopContent>
             </LottieWrapper>
           </Section>
