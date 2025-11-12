@@ -36,6 +36,7 @@ const SubText = styled.p`
   line-height: 1.5;
   color: #fff;
   font-weight: 500;
+  margin-bottom: 35px;
 `;
 
 const Content = styled.div`
