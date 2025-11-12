@@ -86,16 +86,8 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
-  font-family:
-    'pretendard',
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    'Helvetica Neue',
-    'Segoe UI',
-    Arial,
-    sans-serif;
+  font-family: 'pretendard', -apple-system, BlinkMacSystemFont, system-ui,
+    Roboto, 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
   color: #fff;
 }
 body {
@@ -148,7 +140,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background: rgba(220, 20, 60); /* 스크롤바 색상 */
+  background: #ed27cf; /* 스크롤바 색상 */
   border-radius: 10px; /* 스크롤바 둥근 테두리 */
 }
 
