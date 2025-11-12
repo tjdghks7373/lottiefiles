@@ -1,6 +1,7 @@
 'use client';
 import styled from 'styled-components';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
 const Wrapper = styled.div`
@@ -37,9 +38,23 @@ const ListItem = styled.li`
   font-weight: 600;
   line-height: 60px;
   text-align: center;
+  a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 600;
+  }
+  a:hover {
+    color: #4a90e2;
+  }
+  a.active {
+    color: #4a90e2;
+    font-weight: 700;
+  }
 `;
 
 export default function Header() {
+  const pathname = usePathname();
   return (
     <Wrapper>
       <Title>
@@ -58,10 +73,17 @@ export default function Header() {
             <Link href={'/about'}>About</Link>
           </ListItem> */}
           <ListItem>
-            <Link href={'/'}>Icons</Link>
+            <Link href="/" className={pathname === '/' ? 'active' : ''}>
+              Icons
+            </Link>
           </ListItem>
           <ListItem>
-            <Link href={'/sample'}>Sample</Link>
+            <Link
+              href="/sample"
+              className={pathname === '/sample' ? 'active' : ''}
+            >
+              Sample
+            </Link>
           </ListItem>
         </List>
       </Navi>
