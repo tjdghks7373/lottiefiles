@@ -80,8 +80,7 @@ const LottieWrapper = styled.div`
   cursor: pointer;
 
   &:hover {
-    border: 3px solid #4a90e2;
-  }
+    border: 3px solid #ed27cf
 `;
 
 const PopContent = styled.div`
