@@ -1,6 +1,7 @@
 'use client';
 import styled from 'styled-components';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,9 +15,12 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
+  display: flex;
+  align-items: center;
+  height: 60px;
+  margin: 10px 0;
   font-size: 24px;
   font-weight: 700;
-  line-height: 60px;
 `;
 
 const Navi = styled.nav`
@@ -39,7 +43,14 @@ export default function Header() {
   return (
     <Wrapper>
       <Title>
-        <Link href={'/'}>Lottie Files</Link>
+        <Link href={'/'}>
+          <Image
+            src="/image/logo.png"
+            width={100}
+            height={40}
+            alt="Lottie Files"
+          />
+        </Link>
       </Title>
       <Navi>
         <List>

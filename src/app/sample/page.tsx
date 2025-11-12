@@ -21,11 +21,12 @@ const Container = styled.div`
 `;
 
 const MainText = styled.h1`
-  font-size: 60px;
+  font-size: 50px;
   text-align: center;
   margin-top: 100px;
   line-height: 1.2;
   font-weight: 700;
+  margin-bottom: 35px;
 `;
 
 const SubText = styled.p`
@@ -33,7 +34,7 @@ const SubText = styled.p`
   text-align: center;
   margin-top: 20px;
   line-height: 1.5;
-  color: #b3b6bf;
+  color: #fff;
   font-weight: 500;
 `;
 
@@ -224,7 +225,8 @@ export default function Home() {
         <MainText>
           쉽고 자유로운 모션
           <br />
-          무한한 가능성! 모션을 디자인하세요.
+          무한한 가능성! <br />
+          모션을 디자인하세요.
         </MainText>
         <SubText>
           &quot;작은 모션으로도 프로다운 감각과 거대한 임팩트를 담아보세요.
