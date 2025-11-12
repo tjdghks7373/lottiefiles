@@ -38,12 +38,14 @@ const ListItem = styled.li`
 export default function Header() {
   return (
     <Wrapper>
-      <Title><Link href={'/'}>Lottie Files</Link></Title>
+      <Title>
+        <Link href={'/'}>Lottie Files</Link>
+      </Title>
       <Navi>
         <List>
-          <ListItem>
+          {/* <ListItem>
             <Link href={'/about'}>About</Link>
-          </ListItem>
+          </ListItem> */}
           <ListItem>
             <Link href={'/'}>Icons</Link>
           </ListItem>

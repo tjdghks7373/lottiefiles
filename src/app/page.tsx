@@ -153,22 +153,22 @@ export default function Home() {
     const loadAnimations = async () => {
       try {
         const files: LottieItem[] = [
-          { name: 'Calendar', path: '/lottie/Calendar.json' },
-          { name: 'Clapping', path: '/lottie/Clapping.json' },
-          { name: 'Community_A', path: '/lottie/Community_A.json' },
-          { name: 'Community_B', path: '/lottie/Community_B.json' },
-          { name: 'Confetti', path: '/lottie/Confetti.json' },
-          { name: 'Coupon_Popup', path: '/lottie/Coupon_Popup.json' },
-          { name: 'Coupon_TVING', path: '/lottie/Coupon_TVING.json' },
-          { name: 'Fortune', path: '/lottie/Fortune.json' },
-          { name: 'Fun', path: '/lottie/Fun.json' },
-          { name: 'GIft', path: '/lottie/GIft.json' },
-          { name: 'Onewalk', path: '/lottie/Onewalk.json' },
-          { name: 'Pay', path: '/lottie/Pay.json' },
-          { name: 'Points_Popup', path: '/lottie/points_Popup.json' },
-          { name: 'Points', path: '/lottie/Points.json' },
-          { name: 'Roulette', path: '/lottie/Roulette.json' },
-          { name: 'Seed', path: '/lottie/Seed.json' },
+          { name: 'Calendar', path: '/lottie/icons/Calendar.json' },
+          { name: 'Clapping', path: '/lottie/icons/Clapping.json' },
+          { name: 'Community_A', path: '/lottie/icons/Community_A.json' },
+          { name: 'Community_B', path: '/lottie/icons/Community_B.json' },
+          { name: 'Confetti', path: '/lottie/icons/Confetti.json' },
+          { name: 'Coupon_Popup', path: '/lottie/icons/Coupon_Popup.json' },
+          { name: 'Coupon_TVING', path: '/lottie/icons/Coupon_TVING.json' },
+          { name: 'Fortune', path: '/lottie/icons/Fortune.json' },
+          { name: 'Fun', path: '/lottie/icons/Fun.json' },
+          { name: 'GIft', path: '/lottie/icons/GIft.json' },
+          { name: 'Onewalk', path: '/lottie/icons/Onewalk.json' },
+          { name: 'Pay', path: '/lottie/icons/Pay.json' },
+          { name: 'Points_Popup', path: '/lottie/icons/points_Popup.json' },
+          { name: 'Points', path: '/lottie/icons/Points.json' },
+          { name: 'Roulette', path: '/lottie/icons/Roulette.json' },
+          { name: 'Seed', path: '/lottie/icons/Seed.json' },
         ];
         setLotties(files);
 

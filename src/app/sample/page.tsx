@@ -1,6 +1,26 @@
 'use client';
-import Header from '@/components/layout/Header';
+import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
+import Header from '@/components/layout/Header';
+import Modal from '@/components/Modal';
+import ScrollCircles from '@/components/ScrollCircles';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+interface LottieItem {
+  name: string;
+  path: string;
+}
+
+interface AnimationData {
+  v: string;
+  fr: number;
+  ip: number;
+  op: number;
+  w: number;
+  h: number;
+  [key: string]: unknown; // 기타 필드는 unknown으로 처리
+}
 
 const Container = styled.div`
   max-width: 1400px;
@@ -8,13 +28,245 @@ const Container = styled.div`
   padding: 0 20px 200px;
 `;
 
-export default function Sample() {
+const MainText = styled.h1`
+  font-size: 60px;
+  text-align: center;
+  margin-top: 100px;
+  line-height: 1.2;
+  font-weight: 700;
+`;
+
+const SubText = styled.p`
+  font-size: 20px;
+  text-align: center;
+  margin-top: 20px;
+  line-height: 1.5;
+  color: #b3b6bf;
+  font-weight: 500;
+`;
+
+const Content = styled.div`
+  margin-top: 50px;
+  position: relative;
+  z-index: 22;
+  background-color: #000;
+`;
+
+const List = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 88px;
+
+  & > li {
+    list-style: none;
+  }
+`;
+
+const ListItem = styled.li`
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const LottieWrapper = styled.div`
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #1e1c1e;
+  border: 3px solid #2c2c2c;
+  box-shadow: inset 2px 2px 2px #232323;
+  cursor: pointer;
+
+  &:hover {
+    border: 3px solid #4a90e2;
+  }
+`;
+
+const PopContent = styled.div`
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+`;
+
+const DownloadButton = styled.button`
+  padding: 15px 24px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+  width: 100%;
+`;
+const Section = styled.div`
+  margin: 40px auto 10px;
+`;
+
+// ScrollCircles 스타일 정의
+const FixedScrollCircles = styled(ScrollCircles)`
+  position: fixed; // 고정 위치
+  top: 20px; // 원하는 위치로 조정
+  left: 20px; // 원하는 위치로 조정
+  z-index: 1000; // 다른 요소 위에 표시
+`;
+
+export default function Home() {
+  const [lotties, setLotties] = useState<LottieItem[]>([]);
+  const [animations, setAnimations] = useState<AnimationData[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentJson, setCurrentJson] = useState<AnimationData | null>(null);
+
+  const openModal = (json: AnimationData) => {
+    setCurrentJson(json);
+    setIsOpen(true);
+  };
+
+  const handleDownload = (json: AnimationData, name: string) => {
+    const blob = new Blob([JSON.stringify(json, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  useEffect(() => {
+    const loadAnimations = async () => {
+      try {
+        const files: LottieItem[] = [
+          { name: 'Badge', path: '/lottie/sample/Badge.json' },
+          { name: 'Cloud', path: '/lottie/sample/Cloud.json' },
+          { name: 'Event_Snow', path: '/lottie/sample/Event_Snow.json' },
+          { name: 'Event_Spring', path: '/lottie/sample/Event_Spring.json' },
+          { name: 'Event_Summer', path: '/lottie/sample/Event_Summer.json' },
+          { name: 'Gift', path: '/lottie/sample/Gift.json' },
+        ];
+        setLotties(files);
+
+        const loaded = await Promise.all(
+          files.map(async (item) => {
+            try {
+              const res = await fetch(item.path);
+              if (!res.ok) throw new Error(`Failed to fetch ${item.path}`);
+              return await res.json();
+            } catch (error) {
+              console.error(error);
+              return null;
+            }
+          })
+        );
+        setAnimations(loaded.filter((anim) => anim !== null));
+      } catch (error) {
+        console.error('Error loading animations:', error);
+      }
+    };
+    loadAnimations();
+  }, []);
+
   return (
     <>
       <Header />
       <Container>
-        <div>Sample</div>
+        <MainText>
+          Effortless Motion.
+          <br />
+          Endless Creativity.
+        </MainText>
+        <SubText>
+          Explore, edit, and download stunning Lottie animations for your next
+          project.
+        </SubText>
+        <Content>
+          <List>
+            {lotties.map((item, index) => (
+              <ListItem key={`${item.name}-${index}`}>
+                {animations[index] ? (
+                  <LottieWrapper>
+                    <Lottie
+                      animationData={animations[index]}
+                      onClick={() => openModal(animations[index])}
+                      style={{
+                        height: '100px',
+                        width: '100px',
+                      }}
+                    />
+                  </LottieWrapper>
+                ) : (
+                  <p>Loading...</p>
+                )}
+                <p>{item.name}</p>
+              </ListItem>
+            ))}
+          </List>
+        </Content>
       </Container>
+      <FixedScrollCircles
+        minCount={5}
+        maxCount={10}
+        minSize={40}
+        maxSize={120}
+        minOffset={100}
+        maxOffset={600}
+        minDuration={7}
+        maxDuration={10}
+        colors={[
+          '#a2dbf5',
+          '#f8a9ec',
+          '#cea4f9',
+          '#9d49f4',
+          '#617cff',
+          '#ed27cf',
+        ]}
+      />
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        {currentJson && (
+          <Section>
+            <LottieWrapper style={{ width: '99%', height: 300 }}>
+              <PopContent>
+                <Lottie
+                  animationData={currentJson}
+                  style={{
+                    width: '200px',
+                    height: '200px',
+                  }}
+                  loop
+                />
+              </PopContent>
+            </LottieWrapper>
+            <DownloadButton
+              onClick={() => {
+                const currentLottie = lotties.find(
+                  (item, index) => animations[index] === currentJson
+                );
+                if (currentLottie) {
+                  handleDownload(currentJson, currentLottie.name);
+                }
+              }}
+            >
+              Download JSON
+            </DownloadButton>
+          </Section>
+        )}
+      </Modal>
     </>
   );
 }
