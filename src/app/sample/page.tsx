@@ -92,11 +92,10 @@ const LottieWrapper = styled.div`
 
 const PopContent = styled.div`
   width: 300px;
-  height: 300px;
+  padding: 70px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
 `;
 
 const DownloadButton = styled.button`
@@ -240,16 +239,9 @@ export default function Home() {
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         {currentJson && (
           <Section>
-            <LottieWrapper style={{ width: '99%', height: 300 }}>
+            <LottieWrapper style={{ width: '99%', height: 'auto' }}>
               <PopContent>
-                <Lottie
-                  animationData={currentJson}
-                  style={{
-                    width: '200px',
-                    height: '200px',
-                  }}
-                  loop
-                />
+                <Lottie animationData={currentJson} loop />
               </PopContent>
             </LottieWrapper>
             <DownloadButton
