@@ -47,7 +47,7 @@ const Content = styled.div`
 const List = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 88px;
+  gap: 135px;
 
   & > li {
     list-style: none;
@@ -184,8 +184,8 @@ export default function Home() {
     const files: LottieItem[] = [
       { name: 'Cloud', path: '/lottie/sample/Cloud.gif', type: 'gif' },
       {
-        name: 'Event_Snow',
-        path: '/lottie/sample/Event_Snow.gif',
+        name: 'Badge',
+        path: '/lottie/sample/Badge.gif',
         type: 'gif',
       },
       {
@@ -317,7 +317,6 @@ export default function Home() {
                         style={{
                           width: '400px',
                           maxWidth: '100%',
-                          maxHeight: 400,
                         }}
                       >
                         <Lottie
@@ -349,9 +348,6 @@ export default function Home() {
                         borderRadius: 8,
                       }}
                     />
-                    <button onClick={() => handleDownload(currentAsset)}>
-                      Download GIF
-                    </button>
                   </div>
                 )}
               </PopContent>
