@@ -222,13 +222,16 @@ export default function Home() {
       <Header />
       <Container>
         <MainText>
-          Effortless Motion.
+          쉽고 자유로운 모션
           <br />
-          Endless Creativity.
+          무한한 가능성! 모션을 디자인하세요.
         </MainText>
         <SubText>
-          Explore, edit, and download stunning Lottie animations for your next
-          project.
+          &quot; 작은 모션으로도 프로다운 감각과 거대한 임팩트를 담아보세요.
+          <br />
+          가볍고 효율적인 애니메이션을 손쉽게 만들고 관리하며, 다양한 플랫폼에서
+          <br />
+          바로 활용할 수 있답니다. &quot;
         </SubText>
         <Content>
           <List>
