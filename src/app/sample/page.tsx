@@ -1,25 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import Header from '@/components/layout/Header';
 import Modal from '@/components/Modal';
 import ScrollCircles from '@/components/ScrollCircles';
 
-const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 interface LottieItem {
   name: string;
   path: string;
-}
-
-interface AnimationData {
-  v: string;
-  fr: number;
-  ip: number;
-  op: number;
-  w: number;
-  h: number;
-  [key: string]: unknown; // 기타 필드는 unknown으로 처리
 }
 
 const Container = styled.div`
@@ -125,60 +113,33 @@ const FixedScrollCircles = styled(ScrollCircles)`
 
 export default function Home() {
   const [lotties, setLotties] = useState<LottieItem[]>([]);
-  const [animations, setAnimations] = useState<AnimationData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [currentJson, setCurrentJson] = useState<AnimationData | null>(null);
+  const [currentGif, setCurrentGif] = useState<string | null>(null);
 
-  const openModal = (json: AnimationData) => {
-    setCurrentJson(json);
+  const openModal = (gifPath: string) => {
+    setCurrentGif(gifPath);
     setIsOpen(true);
   };
 
-  const handleDownload = (json: AnimationData, name: string) => {
-    const blob = new Blob([JSON.stringify(json, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
+  const handleDownload = (path: string, name: string) => {
+    // Use anchor with download attribute (works for same-origin public files)
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `${name}.json`;
+    a.href = path;
+    a.download = `${name}.gif`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   };
 
   useEffect(() => {
-    const loadAnimations = async () => {
-      try {
-        const files: LottieItem[] = [
-          { name: 'Badge', path: '/lottie/sample/Badge.json' },
-          { name: 'Cloud', path: '/lottie/sample/Cloud.json' },
-          { name: 'Event_Snow', path: '/lottie/sample/Event_Snow.json' },
-          { name: 'Event_Spring', path: '/lottie/sample/Event_Spring.json' },
-          { name: 'Event_Summer', path: '/lottie/sample/Event_Summer.json' },
-          { name: 'Gift', path: '/lottie/sample/Gift.json' },
-        ];
-        setLotties(files);
-
-        const loaded = await Promise.all(
-          files.map(async (item) => {
-            try {
-              const res = await fetch(item.path);
-              if (!res.ok) throw new Error(`Failed to fetch ${item.path}`);
-              return await res.json();
-            } catch (error) {
-              console.error(error);
-              return null;
-            }
-          })
-        );
-        setAnimations(loaded.filter((anim) => anim !== null));
-      } catch (error) {
-        console.error('Error loading animations:', error);
-      }
-    };
-    loadAnimations();
+    const files: LottieItem[] = [
+      { name: 'Cloud', path: '/lottie/sample/Cloud.gif' },
+      { name: 'Event_Snow', path: '/lottie/sample/Event_Snow.gif' },
+      { name: 'Event_Spring', path: '/lottie/sample/Event_Spring.gif' },
+      { name: 'Event_Summer', path: '/lottie/sample/Event_Summer.gif' },
+      { name: 'Gift', path: '/lottie/sample/Gift.gif' },
+    ];
+    setLotties(files);
   }, []);
 
   return (
@@ -198,20 +159,19 @@ export default function Home() {
           <List>
             {lotties.map((item, index) => (
               <ListItem key={`${item.name}-${index}`}>
-                {animations[index] ? (
-                  <LottieWrapper>
-                    <Lottie
-                      animationData={animations[index]}
-                      onClick={() => openModal(animations[index])}
-                      style={{
-                        height: '100px',
-                        width: '100px',
-                      }}
-                    />
-                  </LottieWrapper>
-                ) : (
-                  <p>Loading...</p>
-                )}
+                <LottieWrapper>
+                  <img
+                    src={item.path}
+                    alt={item.name}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: 8,
+                    }}
+                    onClick={() => openModal(item.path)}
+                  />
+                </LottieWrapper>
                 <p>{item.name}</p>
               </ListItem>
             ))}
@@ -237,25 +197,21 @@ export default function Home() {
         ]}
       />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        {currentJson && (
+        {currentGif && (
           <Section>
             <LottieWrapper style={{ width: '99%', height: 'auto' }}>
-              <PopContent>
-                <Lottie animationData={currentJson} loop />
+              <PopContent style={{ flexDirection: 'column', gap: 16 }}>
+                <img
+                  src={currentGif}
+                  alt="preview"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '400px',
+                    borderRadius: 8,
+                  }}
+                />
               </PopContent>
             </LottieWrapper>
-            <DownloadButton
-              onClick={() => {
-                const currentLottie = lotties.find(
-                  (item, index) => animations[index] === currentJson
-                );
-                if (currentLottie) {
-                  handleDownload(currentJson, currentLottie.name);
-                }
-              }}
-            >
-              Download JSON
-            </DownloadButton>
           </Section>
         )}
       </Modal>
