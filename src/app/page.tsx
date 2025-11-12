@@ -31,7 +31,7 @@ const Container = styled.div`
 const MainText = styled.h1`
   font-size: 50px;
   text-align: center;
-  margin-top: 100px;
+  margin-top: 115px;
   line-height: 1.2;
   font-weight: 700;
   margin-bottom: 35px;
