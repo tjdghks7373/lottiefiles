@@ -200,6 +200,11 @@ export default function Home() {
         type: 'gif',
       },
       { name: 'Gift', path: '/lottie/sample/Gift.gif', type: 'gif' },
+      {
+        name: 'cjpayfasta',
+        path: '/lottie/sample/cjpayfasta.json',
+        type: 'lottie',
+      },
     ];
     setLotties(files);
     // Preload lottie JSON thumbnails
@@ -328,9 +333,6 @@ export default function Home() {
                           animationData={lottieDataMap[currentAsset.path]}
                         />
                       </div>
-                      <button onClick={() => handleDownload(currentAsset)}>
-                        Download JSON
-                      </button>
                     </div>
                   ) : (
                     <div>Loading animation...</div>
